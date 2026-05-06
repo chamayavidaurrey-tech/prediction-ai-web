@@ -96,6 +96,12 @@ async function fullScan24_7() {
         confidence: 85 + Math.floor(Math.random() * 10)
     }));
 
+    if (LIVE_DATA.combo.length > 0) {
+        console.log('✅ Predictions Generated: ', LIVE_DATA.combo);
+    } else {
+        console.warn('⚠️ No predictions generated from matches.');
+    }
+
     const combo5 = LIVE_DATA.combo.filter(prediction => prediction.confidence >= 85).slice(0, 5);
     LIVE_DATA.totalOdds = combo5.reduce((acc, pred) => acc * parseFloat(pred.odds), 1).toFixed(2);
 
@@ -103,6 +109,7 @@ async function fullScan24_7() {
     LIVE_DATA.matchesToday = LIVE_DATA.flashscoreLive.length;
     LIVE_DATA.lastUpdate = new Date().toLocaleString();
     io.emit('update-data', LIVE_DATA);
+    console.log('✅ Data sent to clients:', LIVE_DATA);
 
     console.log(`✅ Completed Scan - Matches Live: ${LIVE_DATA.matchesToday}`);
 }
