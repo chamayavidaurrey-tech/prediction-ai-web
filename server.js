@@ -32,6 +32,7 @@ async function fetchFlashscoreLive() {
         if (!response.ok) throw new Error('API Request Failed');
 
         const data = await response.json();
+        console.log('✅ Flashscore Data Received:', data); // Debug log to check API response
         return (data.fixtures || []).slice(0, 20).map(match => ({
             home: match.home.name || 'Home',
             away: match.away.name || 'Away',
@@ -42,7 +43,7 @@ async function fetchFlashscoreLive() {
             score: match.score ? `${match.score.fulltime.home}-${match.score.fulltime.away}` : '0-0'
         }));
     } catch (error) {
-        console.error('Error fetching FlashscoreLive:', error);
+        console.error('❌ Error fetching FlashscoreLive:', error);
         return getFlashscoreFallback();
     }
 }
@@ -75,6 +76,9 @@ async function fullScan24_7() {
 
     // Fetch Flashscore data
     LIVE_DATA.flashscoreLive = await fetchFlashscoreLive();
+    if (LIVE_DATA.flashscoreLive.length === 0) {
+        console.warn('⚠️ No matches fetched from the API or fallback data.');
+    }
 
     // Fetch Betting Odds
     await fetchBettingOdds();
