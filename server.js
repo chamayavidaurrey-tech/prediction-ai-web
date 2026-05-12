@@ -1,39 +1,3 @@
-const express = require('express');
-const http = require('http');
-const { Server } = require('socket.io');
-const cors = require('cors');
-const cron = require('node-cron');
-const fetch = require('node-fetch');
-
-const app = express();
-const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "*" } });
-
-app.use(cors());
-app.use(express.static('./'));
-app.use(express.json());
-
-let LIVE_DATA = {
-    matchesToday: [],
-    combo: [],
-    top3: [],
-    totalOdds: "5.23",
-    casasApuestas: [],
-    flashscoreLive: [],
-    lastUpdate: new Date().toLocaleString()
-};
-
-// 🔥 FLASHSCORE + BET365 + WILLIAM HILL APIs
-async function fetchFlashscoreLive() {
-    try {
-        // Flashscore-like data (scraping simulado + APIs reales)
-        const today = new Date().toISOString().split('T')[0];
-        const flashscoreData = await fetch(`https://api-football-standings.azharimm.dev/leagues/eng.1/fixtures?date=${today}`);
-        const data = await flashscoreData.json();
-        
-        return (data.fixtures || []).slice(0, 20).map(f => ({
-            home: f.home.name || 'Home',
-            away: f.away.name || 'Away',
             time: f.time || '15:00',
             date: today,
             league: f.league.name || 'Premier',
