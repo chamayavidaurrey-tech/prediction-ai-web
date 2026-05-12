@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: football_ai
+    ports:
+      - '5432:5432'
+
+  redis:
+    image: redis:7
+    ports:
+      - '6379:6379'
+
+  backend:
+    build: ./backend
+    ports:
+      - '5000:5000'
+    depends_on:
+      - postgres
+      - redis
+
+  frontend:
+    build: ./frontend
+    ports:
+      - '3000:3000'
