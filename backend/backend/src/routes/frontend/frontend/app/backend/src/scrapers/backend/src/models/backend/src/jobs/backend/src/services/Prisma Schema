@@ -1,0 +1,17 @@
+@id @default(autoincrement())
+  fixtureId    Int      @unique
+  homeTeam     String
+  awayTeam     String
+  winner       String
+  confidence   Float
+  publishedAt  DateTime
+}
+
+model LiveAnalysis {
+  id                 Int      @id @default(autoincrement())
+  fixtureId          Int      @unique
+  momentum           Float
+  pressure           Float
+  dangerousAttacks   Float
+  updatedAt          DateTime
+}
